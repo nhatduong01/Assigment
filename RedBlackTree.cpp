@@ -256,6 +256,10 @@ void RedBlackTree::remove(Node *&_root, int _key)
                 _root->pLeft->pParent = _root->pParent;
                 if (_root->pParent)
                 {
+                    if (temp->color == Black)
+                    {
+                        removeFixup(_root->pLeft);
+                    }
                     if (_root == _root->pParent->pLeft)
                     {
                         _root->pParent->pLeft = _root->pLeft;
@@ -272,10 +276,6 @@ void RedBlackTree::remove(Node *&_root, int _key)
                     removeFixup(_root);
                     return;
                 }
-                if (temp->color == Black)
-                {
-                    removeFixup(_root->pLeft);
-                }
                 delete temp;
             }
             else if (!_root->pLeft)
@@ -284,6 +284,11 @@ void RedBlackTree::remove(Node *&_root, int _key)
                 _root->pRight->pParent = _root->pParent;
                 if (_root->pParent)
                 {
+                    if (temp->color == Black)
+                    {
+                        removeFixup(_root->pRight);
+                    }
+                    delete temp;
                     if (_root == _root->pParent->pLeft)
                     {
                         _root->pParent->pLeft = _root->pRight;
@@ -300,11 +305,6 @@ void RedBlackTree::remove(Node *&_root, int _key)
                     removeFixup(_root);
                     return;
                 }
-                if (temp->color == Black)
-                {
-                    removeFixup(_root->pRight);
-                }
-                delete temp;
             }
             else
             {
