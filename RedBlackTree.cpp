@@ -233,6 +233,7 @@ void RedBlackTree::remove(Node *&_root, int _key)
                 {
                     delete temp;
                     this->root = nullptr;
+                    _root = nullptr;
                     return;
                 }
                 if (_root->color == Black)
@@ -276,6 +277,7 @@ void RedBlackTree::remove(Node *&_root, int _key)
                     removeFixup(_root);
                     return;
                 }
+                _root = nullptr;
                 delete temp;
             }
             else if (!_root->pLeft)
@@ -305,6 +307,8 @@ void RedBlackTree::remove(Node *&_root, int _key)
                     removeFixup(_root);
                     return;
                 }
+                _root = nullptr;
+                delete temp;
             }
             else
             {
@@ -593,6 +597,12 @@ int main()
     test_tree.printTreeStructure();
     cout << endl;
     test_tree.NLR_traverse();
+    for (int i = 150; i < 200; i++)
+        test_tree.insert(i);
+    test_tree.printTreeStructure();
+    // for (int i = 150; i < 200; i++)
+    //     test_tree.remove(i);
+    // test_tree.printTreeStructure();
     // for (int i = 0; i < sizeof(arr) / sizeof(int); i++)
     // {
     //     test_tree.remove(arr1[i]);
