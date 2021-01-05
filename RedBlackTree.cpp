@@ -269,6 +269,8 @@ void RedBlackTree::remove(Node *&_root, int _key)
                     {
                         _root->pParent->pRight = _root->pLeft;
                     }
+                    //_root = _root->pLeft;
+                    delete temp;
                 }
                 else
                 {
@@ -277,8 +279,6 @@ void RedBlackTree::remove(Node *&_root, int _key)
                     removeFixup(_root);
                     return;
                 }
-                _root = nullptr;
-                delete temp;
             }
             else if (!_root->pLeft)
             {
@@ -290,7 +290,6 @@ void RedBlackTree::remove(Node *&_root, int _key)
                     {
                         removeFixup(_root->pRight);
                     }
-                    delete temp;
                     if (_root == _root->pParent->pLeft)
                     {
                         _root->pParent->pLeft = _root->pRight;
@@ -299,6 +298,8 @@ void RedBlackTree::remove(Node *&_root, int _key)
                     {
                         _root->pParent->pRight = _root->pRight;
                     }
+                    delete temp;
+                    //_root = _root->pRight;
                 }
                 else
                 {
@@ -307,8 +308,8 @@ void RedBlackTree::remove(Node *&_root, int _key)
                     removeFixup(_root);
                     return;
                 }
-                _root = nullptr;
-                delete temp;
+                // _root = nullptr;
+                // delete temp;
             }
             else
             {
@@ -535,71 +536,107 @@ void RedBlackTree::InsertFixup(Node *fixed_Node)
 int main()
 {
     RedBlackTree test_tree;
-    test_tree.insert(5);
-    test_tree.insert(11);
-    test_tree.insert(10);
-    test_tree.insert(12);
-    test_tree.printTreeStructure();
-    cout << "\nTesting delete\n";
-    test_tree.remove(5);
-    test_tree.printTreeStructure();
-    test_tree.remove(11);
-    test_tree.printTreeStructure();
-    test_tree.remove(10);
-    test_tree.printTreeStructure();
-    test_tree.remove(12);
-    test_tree.printTreeStructure();
-    int arr[] = {10, 52, 98, 32, 68, 92, 48, 13, 42, 63, 99, 100, 50, 40, 12, 11, 9, 0, 1, 3, 7};
-    for (int i = 0; i < sizeof(arr) / sizeof(int); i++)
-    {
-        test_tree.insert(arr[i]);
-    }
-    test_tree.NLR_traverse();
-    cout << endl;
-    test_tree.LRN_traverse();
-    cout << endl;
-    test_tree.printTreeStructure();
-    test_tree.remove(52);
-    cout << endl;
-    test_tree.printTreeStructure();
-    cout << endl;
-    test_tree.NLR_traverse();
-    cout << "\n Next Test \n";
-    test_tree.remove(50);
-    test_tree.printTreeStructure();
-    cout << endl;
-    test_tree.NLR_traverse();
-    cout << "\n Next Test \n";
-    test_tree.remove(48);
-    test_tree.printTreeStructure();
-    cout << endl;
-    test_tree.NLR_traverse();
-    cout << "\n Next Test \n";
-    test_tree.remove(10);
-    test_tree.printTreeStructure();
-    cout << endl;
-    test_tree.NLR_traverse();
-    test_tree.clear();
-    cout << endl;
-    test_tree.printTreeStructure();
-    int arr1[] = {10, 52, 98, 32, 68, 92, 48, 13, 42, 63, 99, 100, 50, 40, 12, 11, 9, 0, 1, 3, 7};
-    for (int i = 0; i < sizeof(arr) / sizeof(int); i++)
-    {
-        test_tree.insert(arr1[i]);
-    }
-    test_tree.printTreeStructure();
-    cout << "\nThe biggest test \n";
-    test_tree.remove(10);
-    test_tree.remove(52);
-    test_tree.remove(98);
-    test_tree.remove(32);
-    test_tree.remove(68);
-    test_tree.printTreeStructure();
-    cout << endl;
-    test_tree.NLR_traverse();
-    for (int i = 150; i < 200; i++)
+    for (int i = 1; i <= 20; i++)
         test_tree.insert(i);
     test_tree.printTreeStructure();
+    cout << endl;
+    test_tree.NLR_traverse();
+    for (int i = 1; i <= 10; i++)
+        test_tree.remove(i);
+    test_tree.printTreeStructure();
+    cout << endl;
+    test_tree.NLR_traverse();
+    for (int i = 1; i <= 10; i++)
+        test_tree.insert(i);
+    cout << endl;
+    test_tree.printTreeStructure();
+    cout << endl;
+    test_tree.NLR_traverse();
+    for (int i = 11; i <= 20; i++)
+        test_tree.remove(i);
+    cout << endl;
+    test_tree.printTreeStructure();
+    cout << endl;
+    test_tree.NLR_traverse();
+    for (int i = 1; i <= 10; i++)
+    {
+        test_tree.remove(i);
+    }
+    test_tree.NLR_traverse();
+    test_tree.printTreeStructure();
+    for (int i = 0; i < 150; i++)
+        test_tree.insert(i);
+    test_tree.NLR_traverse();
+    cout << "\nLast test \n";
+    for (int i = 31; i <= 100; i++)
+        test_tree.remove(i);
+    test_tree.NLR_traverse();
+    // RedBlackTree test_tree;
+    // test_tree.insert(5);
+    // test_tree.insert(11);
+    // test_tree.insert(10);
+    // test_tree.insert(12);
+    // test_tree.printTreeStructure();
+    // cout << "\nTesting delete\n";
+    // test_tree.remove(5);
+    // test_tree.printTreeStructure();
+    // test_tree.remove(11);
+    // test_tree.printTreeStructure();
+    // test_tree.remove(10);
+    // test_tree.printTreeStructure();
+    // test_tree.remove(12);
+    // test_tree.printTreeStructure();
+    // int arr[] = {10, 52, 98, 32, 68, 92, 48, 13, 42, 63, 99, 100, 50, 40, 12, 11, 9, 0, 1, 3, 7};
+    // for (int i = 0; i < sizeof(arr) / sizeof(int); i++)
+    // {
+    //     test_tree.insert(arr[i]);
+    // }
+    // test_tree.NLR_traverse();
+    // cout << endl;
+    // test_tree.LRN_traverse();
+    // cout << endl;
+    // test_tree.printTreeStructure();
+    // test_tree.remove(52);
+    // cout << endl;
+    // test_tree.printTreeStructure();
+    // cout << endl;
+    // test_tree.NLR_traverse();
+    // cout << "\n Next Test \n";
+    // test_tree.remove(50);
+    // test_tree.printTreeStructure();
+    // cout << endl;
+    // test_tree.NLR_traverse();
+    // cout << "\n Next Test \n";
+    // test_tree.remove(48);
+    // test_tree.printTreeStructure();
+    // cout << endl;
+    // test_tree.NLR_traverse();
+    // cout << "\n Next Test \n";
+    // test_tree.remove(10);
+    // test_tree.printTreeStructure();
+    // cout << endl;
+    // test_tree.NLR_traverse();
+    // test_tree.clear();
+    // cout << endl;
+    // test_tree.printTreeStructure();
+    // int arr1[] = {10, 52, 98, 32, 68, 92, 48, 13, 42, 63, 99, 100, 50, 40, 12, 11, 9, 0, 1, 3, 7};
+    // for (int i = 0; i < sizeof(arr) / sizeof(int); i++)
+    // {
+    //     test_tree.insert(arr1[i]);
+    // }
+    // test_tree.printTreeStructure();
+    // cout << "\nThe biggest test \n";
+    // test_tree.remove(10);
+    // test_tree.remove(52);
+    // test_tree.remove(98);
+    // test_tree.remove(32);
+    // test_tree.remove(68);
+    // test_tree.printTreeStructure();
+    // cout << endl;
+    // test_tree.NLR_traverse();
+    // for (int i = 150; i < 200; i++)
+    //     test_tree.insert(i);
+    // test_tree.printTreeStructure();
     // for (int i = 150; i < 200; i++)
     //     test_tree.remove(i);
     // test_tree.printTreeStructure();
