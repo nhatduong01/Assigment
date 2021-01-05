@@ -102,6 +102,7 @@ public:
     }
     ~RedBlackTree()
     {
+        clear();
     }
     void insert(int _key)
     {
