@@ -92,7 +92,7 @@ public:
         }
         void Left_Rotation(Node *);
         void Right_Rotation(Node *);
-        void insert(Node *&);
+        bool insert(Node *&);
         void InsertFixup(Node *);
         void clear(Node *&root)
         {
@@ -135,10 +135,10 @@ public:
         {
             clear();
         }
-        void insert(int start, int end)
+        bool insert(int start, int end)
         {
             Node *new_node = new Node(Interval(start, end));
-            insert(new_node);
+            return insert(new_node);
         }
         void clear()
         {
@@ -155,9 +155,9 @@ public:
     {
         Root_tree->clear();
     }
-    void insert(int start, int end)
+    bool insert(int start, int end)
     {
-        Root_tree->insert(start, end);
+        return Root_tree->insert(start, end);
     }
     void remove(int start, int end)
     {
@@ -303,6 +303,7 @@ void BusParking::RedBlackTree::remove(Node *&_root, int start, int end)
             if (!_root->pRight && !_root->pLeft)
             //The node have no child
             {
+                _root->max = 0;
                 Node *temp = _root;
                 if (temp == this->root)
                 {
@@ -311,25 +312,36 @@ void BusParking::RedBlackTree::remove(Node *&_root, int start, int end)
                     _root = nullptr;
                     return;
                 }
-                if (_root->max == this->root->max)
+                if (_root)
                 {
                     Node *temp2 = _root->pParent;
-                    if (_root == temp2->pLeft)
-                        temp2->max = max(temp2->pRight->max, temp2->key.end);
-                    else
+                    if (temp2)
                     {
-                        temp2->max = max(temp2->pLeft->max, temp2->key.end);
-                    }
-                    temp2 = temp2->pParent;
-                    while (temp2)
-                    {
-                        int a = 0, b = 0;
-                        if (temp2->pLeft)
-                            a = temp2->pLeft->max;
-                        if (temp2->pRight)
-                            b = temp2->pRight->max;
-                        temp2->max = max(a, b);
+                        if (_root == temp2->pLeft)
+                        {
+                            int a = 0;
+                            if (temp2->pRight)
+                                a = temp2->pRight->max;
+                            temp2->max = max(a, temp2->key.end);
+                        }
+                        else
+                        {
+                            int a = 0;
+                            if (temp2->pLeft)
+                                a = temp2->pLeft->max;
+                            temp2->max = max(a, temp2->key.end);
+                        }
                         temp2 = temp2->pParent;
+                        while (temp2)
+                        {
+                            int a = 0, b = 0;
+                            if (temp2->pLeft)
+                                a = temp2->pLeft->max;
+                            if (temp2->pRight)
+                                b = temp2->pRight->max;
+                            temp2->max = max(a, b);
+                            temp2 = temp2->pParent;
+                        }
                     }
                 }
                 if (_root->color == Black)
@@ -349,25 +361,37 @@ void BusParking::RedBlackTree::remove(Node *&_root, int start, int end)
             }
             else if (!_root->pRight)
             {
-                if (_root->max == this->root->max)
+                _root->max = 0;
+                if (_root)
                 {
                     Node *temp2 = _root->pParent;
-                    if (_root == temp2->pLeft)
-                        temp2->max = max(temp2->pRight->max, temp2->key.end);
-                    else
+                    if (temp2 && temp2->max == _root->key.end)
                     {
-                        temp2->max = max(temp2->pLeft->max, temp2->key.end);
-                    }
-                    temp2 = temp2->pParent;
-                    while (temp2)
-                    {
-                        int a = 0, b = 0;
-                        if (temp2->pLeft)
-                            a = temp2->pLeft->max;
-                        if (temp2->pRight)
-                            b = temp2->pRight->max;
-                        temp2->max = max(a, b);
+                        if (_root == temp2->pLeft)
+                        {
+                            int a = 0;
+                            if (temp2->pRight)
+                                a = temp2->pRight->max;
+                            temp2->max = max(a, temp2->key.end);
+                        }
+                        else
+                        {
+                            int a = 0;
+                            if (temp2->pLeft)
+                                a = temp2->pLeft->max;
+                            temp2->max = max(a, temp2->key.end);
+                        }
                         temp2 = temp2->pParent;
+                        while (temp2)
+                        {
+                            int a = 0, b = 0;
+                            if (temp2->pLeft)
+                                a = temp2->pLeft->max;
+                            if (temp2->pRight)
+                                b = temp2->pRight->max;
+                            temp2->max = max(a, b);
+                            temp2 = temp2->pParent;
+                        }
                     }
                 }
                 Node *temp = _root;
@@ -399,25 +423,37 @@ void BusParking::RedBlackTree::remove(Node *&_root, int start, int end)
             }
             else if (!_root->pLeft)
             {
-                if (_root->max == this->root->max)
+                _root->max = 0;
+                if (_root)
                 {
                     Node *temp2 = _root->pParent;
-                    if (_root == temp2->pLeft)
-                        temp2->max = max(temp2->pRight->max, temp2->key.end);
-                    else
+                    if (temp2 && temp2->max == _root->key.end)
                     {
-                        temp2->max = max(temp2->pLeft->max, temp2->key.end);
-                    }
-                    temp2 = temp2->pParent;
-                    while (temp2)
-                    {
-                        int a = 0, b = 0;
-                        if (temp2->pLeft)
-                            a = temp2->pLeft->max;
-                        if (temp2->pRight)
-                            b = temp2->pRight->max;
-                        temp2->max = max(a, b);
+                        if (_root == temp2->pLeft)
+                        {
+                            int a = 0;
+                            if (temp2->pRight)
+                                a = temp2->pRight->max;
+                            temp2->max = max(a, temp2->key.end);
+                        }
+                        else
+                        {
+                            int a = 0;
+                            if (temp2->pLeft)
+                                a = temp2->pLeft->max;
+                            temp2->max = max(a, temp2->key.end);
+                        }
                         temp2 = temp2->pParent;
+                        while (temp2)
+                        {
+                            int a = 0, b = 0;
+                            if (temp2->pLeft)
+                                a = temp2->pLeft->max;
+                            if (temp2->pRight)
+                                b = temp2->pRight->max;
+                            temp2->max = max(a, b);
+                            temp2 = temp2->pParent;
+                        }
                     }
                 }
                 Node *temp = _root;
@@ -446,34 +482,11 @@ void BusParking::RedBlackTree::remove(Node *&_root, int start, int end)
                     removeFixup(_root);
                     return;
                 }
-                // _root = nullptr;
-                // delete temp;
             }
             else
             {
                 Node *temp = BiggestLeft(_root->pLeft);
                 _root->key = temp->key;
-                if (_root->max == temp->max)
-                {
-                    Node *temp2 = temp->pParent;
-                    if (temp == temp2->pLeft)
-                        temp2->max = max(temp2->pRight->max, temp2->key.end);
-                    else
-                    {
-                        temp2->max = max(temp2->pLeft->max, temp2->key.end);
-                    }
-                    temp2 = temp2->pParent;
-                    while (temp2 != _root && temp2)
-                    {
-                        int a = 0, b = 0;
-                        if (temp2->pLeft)
-                            a = temp2->pLeft->max;
-                        if (temp2->pRight)
-                            b = temp2->pRight->max;
-                        temp2->max = max(a, b);
-                        temp2 = temp2->pParent;
-                    }
-                }
                 remove(temp, temp->key.start, temp->key.end);
             }
         }
@@ -546,7 +559,7 @@ void BusParking::RedBlackTree::Right_Rotation(Node *_root)
         b = _root->pRight->max;
     _root->max = max(max(a, b), _root->key.end);
 }
-void BusParking::RedBlackTree::insert(Node *&new_node)
+bool BusParking::RedBlackTree::insert(Node *&new_node)
 {
     Node *prev = NULL;
     Node *temp = this->root;
@@ -572,7 +585,7 @@ void BusParking::RedBlackTree::insert(Node *&new_node)
         {
             delete new_node;
             new_node = NULL;
-            return;
+            return false;
         }
     }
     new_node->pParent = prev;
@@ -580,7 +593,7 @@ void BusParking::RedBlackTree::insert(Node *&new_node)
     {
         new_node->color = Black;
         this->root = new_node;
-        return;
+        return true;
     }
     else if (new_node->key.start < prev->key.start)
         prev->pLeft = new_node;
@@ -591,6 +604,7 @@ void BusParking::RedBlackTree::insert(Node *&new_node)
     new_node->pLeft = new_node->pRight = NULL;
     new_node->color = Red;
     InsertFixup(new_node);
+    return true;
 }
 void BusParking::RedBlackTree::printTreeStructure()
 {
@@ -776,40 +790,50 @@ int main()
     // intervals.push_back(Interval(2, 4));
     // cout << minPark(intervals);
     BusParking test_bus;
-    test_bus.insert(3, 6);
-    test_bus.insert(1, 8);
-    test_bus.insert(16, 21);
-    test_bus.insert(2, 5);
-    test_bus.insert(1, 30);
-    test_bus.insert(2, 60);
-    test_bus.insert(3, 40);
-    test_bus.insert(1, 52);
-    test_bus.insert(15, 20);
-    test_bus.insert(17, 30);
-    test_bus.insert(18, 60);
-    cout << endl;
+    cout << test_bus.insert(3, 6);
+    cout << test_bus.insert(1, 8);
+    cout << test_bus.insert(16, 21);
+    // cout << test_bus.insert(2, 5);
+    // cout << test_bus.insert(1, 30);
+    // cout << test_bus.insert(2, 60);
+    // cout << test_bus.insert(3, 40);
+    // cout << test_bus.insert(1, 52);
+    // cout << test_bus.insert(1, 52);
+    // cout << test_bus.insert(1, 52);
+    // cout << test_bus.insert(15, 20);
+    // cout << test_bus.insert(17, 30);
+    // cout << test_bus.insert(18, 60);
+    // cout << endl;
+    // test_bus.printNLR();
+    // cout << endl;
+    // test_bus.printLNR();
+    // test_bus.insert(18, 60);
+    // cout << endl;
+    // test_bus.printNLR();
+    // cout << endl;
+    // test_bus.printLNR();
+    // cout << "\nTesting Deleting \n";
+    // test_bus.remove(3, 6);
+    // test_bus.printNLR();
+    // cout << endl;
+    // test_bus.printLNR();
+    // cout << endl;
+    // test_bus.remove(18, 60);
     test_bus.printNLR();
     cout << endl;
     test_bus.printLNR();
-    test_bus.insert(18, 60);
-    cout << endl;
-    test_bus.printNLR();
-    cout << endl;
-    test_bus.printLNR();
-    cout << "\nTesting Deleting \n";
-    test_bus.remove(3, 6);
-    test_bus.printNLR();
-    cout << endl;
-    test_bus.printLNR();
-    cout << endl;
-    test_bus.remove(18, 60);
-    test_bus.printNLR();
-    cout << endl;
-    test_bus.printLNR();
-    for (int i = 0; i < 1000; i++)
+    for (int i = 100; i < 2000000; i++)
     {
         test_bus.insert(i, i + 5);
     }
+    for (int i = 100; i < 2000000; i++)
+    {
+        test_bus.remove(i, i + 5);
+    }
+    cout << "\nAfter the Deleting : \n";
+    test_bus.printNLR();
+    cout << endl;
+    test_bus.printLNR();
     system("pause");
     return 0;
 }
