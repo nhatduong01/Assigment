@@ -72,7 +72,9 @@ public:
         {
             if (_root)
             {
-                cout << _root->key.start << "_" << _root->color << " ";
+                //cout << _root->key.start << "" << _root->color << " ";
+                cout << "(" << _root->key.start << "," << _root->key.end << ")"
+                     << _root->max << " ";
                 NLR_traverse(_root->pLeft);
                 NLR_traverse(_root->pRight);
             }
@@ -83,7 +85,9 @@ public:
             {
                 LRN_traverse(_root->pLeft);
                 LRN_traverse(_root->pRight);
-                cout << _root->key.start << "_" << _root->color << " ";
+                //cout << _root->key.start << "_" << _root->color << " ";
+                cout << "(" << _root->key.start << "," << _root->key.end << ")"
+                     << _root->max << " ";
             }
         }
         void Left_Rotation(Node *);
@@ -145,14 +149,40 @@ public:
     BusParking()
     {
         Root_tree = new RedBlackTree();
+        MinPark = 0;
     }
     ~BusParking()
     {
         Root_tree->clear();
     }
+    void insert(int start, int end)
+    {
+        Root_tree->insert(start, end);
+    }
+    void remove(int start, int end)
+    {
+        Root_tree->remove(start, end);
+    }
+    void printNLR()
+    {
+        Root_tree->NLR_traverse();
+    }
+    void printLNR()
+    {
+        Root_tree->LRN_traverse();
+    }
+    void printStructure()
+    {
+        Root_tree->printTreeStructure();
+    }
+    int minPark()
+    {
+        return MinPark;
+    }
 
 private:
     RedBlackTree *Root_tree;
+    int MinPark;
 };
 void BusParking::RedBlackTree::removeFixup(Node *fixedNode)
 {
@@ -281,6 +311,27 @@ void BusParking::RedBlackTree::remove(Node *&_root, int start, int end)
                     _root = nullptr;
                     return;
                 }
+                if (_root->max == this->root->max)
+                {
+                    Node *temp2 = _root->pParent;
+                    if (_root == temp2->pLeft)
+                        temp2->max = max(temp2->pRight->max, temp2->key.end);
+                    else
+                    {
+                        temp2->max = max(temp2->pLeft->max, temp2->key.end);
+                    }
+                    temp2 = temp2->pParent;
+                    while (temp2)
+                    {
+                        int a = 0, b = 0;
+                        if (temp2->pLeft)
+                            a = temp2->pLeft->max;
+                        if (temp2->pRight)
+                            b = temp2->pRight->max;
+                        temp2->max = max(a, b);
+                        temp2 = temp2->pParent;
+                    }
+                }
                 if (_root->color == Black)
                 {
                     removeFixup(temp);
@@ -298,6 +349,27 @@ void BusParking::RedBlackTree::remove(Node *&_root, int start, int end)
             }
             else if (!_root->pRight)
             {
+                if (_root->max == this->root->max)
+                {
+                    Node *temp2 = _root->pParent;
+                    if (_root == temp2->pLeft)
+                        temp2->max = max(temp2->pRight->max, temp2->key.end);
+                    else
+                    {
+                        temp2->max = max(temp2->pLeft->max, temp2->key.end);
+                    }
+                    temp2 = temp2->pParent;
+                    while (temp2)
+                    {
+                        int a = 0, b = 0;
+                        if (temp2->pLeft)
+                            a = temp2->pLeft->max;
+                        if (temp2->pRight)
+                            b = temp2->pRight->max;
+                        temp2->max = max(a, b);
+                        temp2 = temp2->pParent;
+                    }
+                }
                 Node *temp = _root;
                 _root->pLeft->pParent = _root->pParent;
                 if (_root->pParent)
@@ -327,6 +399,27 @@ void BusParking::RedBlackTree::remove(Node *&_root, int start, int end)
             }
             else if (!_root->pLeft)
             {
+                if (_root->max == this->root->max)
+                {
+                    Node *temp2 = _root->pParent;
+                    if (_root == temp2->pLeft)
+                        temp2->max = max(temp2->pRight->max, temp2->key.end);
+                    else
+                    {
+                        temp2->max = max(temp2->pLeft->max, temp2->key.end);
+                    }
+                    temp2 = temp2->pParent;
+                    while (temp2)
+                    {
+                        int a = 0, b = 0;
+                        if (temp2->pLeft)
+                            a = temp2->pLeft->max;
+                        if (temp2->pRight)
+                            b = temp2->pRight->max;
+                        temp2->max = max(a, b);
+                        temp2 = temp2->pParent;
+                    }
+                }
                 Node *temp = _root;
                 _root->pRight->pParent = _root->pParent;
                 if (_root->pParent)
@@ -360,6 +453,27 @@ void BusParking::RedBlackTree::remove(Node *&_root, int start, int end)
             {
                 Node *temp = BiggestLeft(_root->pLeft);
                 _root->key = temp->key;
+                if (_root->max == temp->max)
+                {
+                    Node *temp2 = temp->pParent;
+                    if (temp == temp2->pLeft)
+                        temp2->max = max(temp2->pRight->max, temp2->key.end);
+                    else
+                    {
+                        temp2->max = max(temp2->pLeft->max, temp2->key.end);
+                    }
+                    temp2 = temp2->pParent;
+                    while (temp2 != _root && temp2)
+                    {
+                        int a = 0, b = 0;
+                        if (temp2->pLeft)
+                            a = temp2->pLeft->max;
+                        if (temp2->pRight)
+                            b = temp2->pRight->max;
+                        temp2->max = max(a, b);
+                        temp2 = temp2->pParent;
+                    }
+                }
                 remove(temp, temp->key.start, temp->key.end);
             }
         }
@@ -396,8 +510,7 @@ void BusParking::RedBlackTree::Left_Rotation(Node *_root)
         a = _root->pLeft->max;
     if (_root->pRight)
         b = _root->pRight->max;
-    _root->max = max(max(a, b), _root->max);
-    //_root = y;
+    _root->max = max(max(a, b), _root->key.end);
 }
 void BusParking::RedBlackTree::Right_Rotation(Node *_root)
 {
@@ -420,13 +533,18 @@ void BusParking::RedBlackTree::Right_Rotation(Node *_root)
     }
     y->pRight = _root;
     _root->pParent = y;
+    int c = 0, d = 0;
+    if (y->pLeft)
+        c = y->pLeft->max;
+    if (y->pRight)
+        d = y->pRight->max;
     y->max = _root->max;
     int a = 0, b = 0;
     if (_root->pLeft)
         a = _root->pLeft->max;
     if (_root->pRight)
         b = _root->pRight->max;
-    _root->max = max(max(a, b), _root->max);
+    _root->max = max(max(a, b), _root->key.end);
 }
 void BusParking::RedBlackTree::insert(Node *&new_node)
 {
@@ -436,9 +554,15 @@ void BusParking::RedBlackTree::insert(Node *&new_node)
     {
         prev = temp;
         if (new_node->key.start < temp->key.start)
+        {
+            if (temp->max < new_node->max)
+                temp->max = new_node->max;
             temp = temp->pLeft;
+        }
         else
         {
+            if (temp->max < new_node->max)
+                temp->max = new_node->max;
             temp = temp->pRight;
         }
     }
@@ -487,7 +611,7 @@ void BusParking::RedBlackTree::printTreeStructure()
         }
         else
         {
-            cout << temp->key.start << "_" << temp->color;
+            cout << "(" << temp->key.start << "," << temp->key.end << ")";
             q.push(temp->pLeft);
             q.push(temp->pRight);
         }
@@ -508,91 +632,11 @@ void BusParking::RedBlackTree::printTreeStructure()
 }
 void BusParking::RedBlackTree::InsertFixup(Node *fixed_Node)
 {
-    while (fixed_Node->pParent && fixed_Node->pParent->color == Red)
+    if (fixed_Node->pParent == this->root)
     {
-        if (fixed_Node->pParent == fixed_Node->pParent->pParent->pLeft)
-        {
-            Node *temp = fixed_Node->pParent->pParent->pRight;
-            if (temp)
-            {
-                if (temp->color == Red)
-                //Case1
-                {
-                    fixed_Node->pParent->color = Black;
-                    temp->color = Black;
-                    fixed_Node->pParent->pParent->color = Red;
-                    fixed_Node = fixed_Node->pParent->pParent;
-                }
-                else
-                {
-                    if (fixed_Node == fixed_Node->pParent->pRight)
-                    // Case 2 we rotate to become case 3
-                    {
-                        fixed_Node = fixed_Node->pParent;
-                        Left_Rotation(fixed_Node);
-                    }
-                    // This is case 3
-                    fixed_Node->pParent->color = Black;
-                    fixed_Node->pParent->pParent->color = Red;
-                    Right_Rotation(fixed_Node->pParent->pParent);
-                }
-                //The cases are symmetric
-            }
-            else
-            {
-                if (fixed_Node == fixed_Node->pParent->pRight)
-                // Case 2 we rotate to become case 3
-                {
-                    fixed_Node = fixed_Node->pParent;
-                    Left_Rotation(fixed_Node);
-                }
-                // This is case 3
-                fixed_Node->pParent->color = Black;
-                fixed_Node->pParent->pParent->color = Red;
-                Right_Rotation(fixed_Node->pParent->pParent);
-            }
-        }
-        else
-        {
-            Node *temp = fixed_Node->pParent->pParent->pLeft;
-            if (temp)
-            {
-                if (temp->color == Red)
-                {
-                    fixed_Node->pParent->color = Black;
-                    temp->color = Black;
-                    fixed_Node->pParent->pParent->color = Red;
-                    fixed_Node = fixed_Node->pParent->pParent;
-                }
-                else
-                {
-                    if (fixed_Node == fixed_Node->pParent->pLeft)
-                    {
-                        fixed_Node = fixed_Node->pParent;
-                        Right_Rotation(fixed_Node);
-                    }
-                    fixed_Node->pParent->color = Black;
-                    fixed_Node->pParent->pParent->color = Red;
-                    Left_Rotation(fixed_Node->pParent->pParent);
-                }
-            }
-            else
-            {
-                if (fixed_Node == fixed_Node->pParent->pLeft)
-                {
-                    fixed_Node = fixed_Node->pParent;
-                    Right_Rotation(fixed_Node);
-                }
-                fixed_Node->pParent->color = Black;
-                fixed_Node->pParent->pParent->color = Red;
-                Left_Rotation(fixed_Node->pParent->pParent);
-            }
-        }
+        if (fixed_Node->max > this->root->max)
+            this->root->max = fixed_Node->max;
     }
-    this->root->color = Black;
-}
-void BusParking::RedBlackTree::InsertFixup(Node *fixed_Node)
-{
     while (fixed_Node->pParent && fixed_Node->pParent->color == Red)
     {
         if (fixed_Node->pParent == fixed_Node->pParent->pParent->pLeft)
@@ -714,14 +758,39 @@ int minPark(vector<Interval> lInterval)
 }
 int main()
 {
-    vector<Interval> intervals;
-    intervals.push_back(Interval(3, 6));
-    intervals.push_back(Interval(1, 8));
-    intervals.push_back(Interval(2, 5));
-    intervals.push_back(Interval(5, 6));
-    intervals.push_back(Interval(3, 7));
-    intervals.push_back(Interval(2, 4));
-    cout << minPark(intervals);
+    // vector<Interval> intervals;
+    // intervals.push_back(Interval(3, 6));
+    // intervals.push_back(Interval(1, 8));
+    // intervals.push_back(Interval(2, 5));
+    // intervals.push_back(Interval(5, 6));
+    // intervals.push_back(Interval(3, 7));
+    // intervals.push_back(Interval(2, 4));
+    // cout << minPark(intervals);
     BusParking test_bus;
+    test_bus.insert(3, 6);
+    test_bus.insert(1, 8);
+    test_bus.insert(16, 21);
+    test_bus.insert(2, 5);
+    test_bus.insert(1, 30);
+    test_bus.insert(2, 60);
+    test_bus.insert(3, 40);
+    test_bus.insert(1, 52);
+    test_bus.insert(15, 20);
+    test_bus.insert(17, 30);
+    test_bus.insert(18, 60);
+    test_bus.printNLR();
+    cout << endl;
+    test_bus.printLNR();
+    cout << "\nTesting Deleting \n";
+    test_bus.remove(3, 6);
+    test_bus.printNLR();
+    cout << endl;
+    test_bus.printLNR();
+    cout << endl;
+    test_bus.remove(18, 60);
+    test_bus.printNLR();
+    cout << endl;
+    test_bus.printLNR();
+    system("pause");
     return 0;
 }
