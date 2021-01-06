@@ -566,6 +566,15 @@ void BusParking::RedBlackTree::insert(Node *&new_node)
             temp = temp->pRight;
         }
     }
+    if (prev)
+    {
+        if (new_node->key.start == prev->key.start && new_node->key.end == prev->key.end)
+        {
+            delete new_node;
+            new_node = NULL;
+            return;
+        }
+    }
     new_node->pParent = prev;
     if (prev == NULL)
     {
@@ -778,6 +787,12 @@ int main()
     test_bus.insert(15, 20);
     test_bus.insert(17, 30);
     test_bus.insert(18, 60);
+    cout << endl;
+    test_bus.printNLR();
+    cout << endl;
+    test_bus.printLNR();
+    test_bus.insert(18, 60);
+    cout << endl;
     test_bus.printNLR();
     cout << endl;
     test_bus.printLNR();
