@@ -806,6 +806,10 @@ int main()
     test_bus.printNLR();
     cout << endl;
     test_bus.printLNR();
+    for (int i = 0; i < 1000; i++)
+    {
+        test_bus.insert(i, i + 5);
+    }
     system("pause");
     return 0;
 }
