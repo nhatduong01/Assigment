@@ -573,9 +573,22 @@ bool BusParking::RedBlackTree::insert(Node *&new_node)
         {
             temp = temp->pLeft;
         }
-        else
+        else if (new_node->key.start > temp->key.start)
         {
             temp = temp->pRight;
+        }
+        else
+        {
+            if (temp->key.end == new_node->key.end)
+            {
+                delete new_node;
+                new_node = nullptr;
+                return false;
+            }
+            else
+            {
+                temp = temp->pRight;
+            }
         }
     }
     if (prev)
@@ -1212,17 +1225,24 @@ int minPark(vector<Interval> lInterval)
     delete[] end;
     return max_bus;
 }
-
 int main()
 {
-    // vector<Interval> intervals;
-    // intervals.push_back(Interval(3, 6));
-    // intervals.push_back(Interval(1, 8));
-    // intervals.push_back(Interval(2, 5));
-    // intervals.push_back(Interval(5, 6));
-    // intervals.push_back(Interval(3, 7));
-    // intervals.push_back(Interval(2, 4));
-    // cout << minPark(intervals);
+    // BusParking bus_test;
+    // for (int i = 0; i < 100000; i++)
+    // {
+    //     bus_test.insert(i, i + 4);
+    // }
+    // cout << "The result is : " << bus_test.minPark() << endl;
+    // for (int i = 0; i < 100000; i++)
+    // {
+    //     bus_test.insert(i, i + 4);
+    // }
+    // cout << "The result is : " << bus_test.minPark() << endl;
+    // for (int i = 0; i < 100000; i++)
+    // {
+    //     bus_test.remove(i, i + 4);
+    // }
+    // cout << "The result is : " << bus_test.minPark() << endl;
     BusParking test_bus;
     test_bus.insert(1, 5);
     test_bus.insert(2, 5);
@@ -1235,6 +1255,11 @@ int main()
     // cout << endl;
     // test_bus.printLNR();
     // test_bus.insert(1, 5);
+    for (int i = 100; i < 2000000; i++)
+        test_bus.insert(i, i + 6);
+    cout << "The final result is : " << test_bus.minPark() << endl;
+    for (int i = 100; i < 2000000; i++)
+        test_bus.remove(i, i + 6);
     test_bus.insert(4, 6);
     // cout << endl;
     test_bus.printNLR();
@@ -1268,42 +1293,6 @@ int main()
     cout << "The final result is : " << test_bus.minPark() << endl;
     test_bus.remove(3, 6);
     cout << "The final result is : " << test_bus.minPark() << endl;
-    for (int i = 100; i < 200000; i++)
-    {
-        test_bus.insert(i, i + 5);
-    }
-    cout << "\n the biggest test is : " << test_bus.minPark() << endl;
-    for (int i = 100; i < 200000; i++)
-    {
-        test_bus.remove(i, i + 5);
-    }
-    cout << "\n the biggest test is : " << test_bus.minPark() << endl;
-    // cout << test_bus.insert(2, 5);
-    // cout << test_bus.insert(1, 30);
-    // cout << test_bus.insert(2, 60);
-    // cout << test_bus.insert(3, 40);
-    // cout << test_bus.insert(1, 52);
-    // cout << test_bus.insert(1, 52);
-    // cout << test_bus.insert(1, 52);
-    // cout << test_bus.insert(15, 20);
-    // cout << test_bus.insert(17, 30);
-    // cout << test_bus.insert(18, 60);
-    // cout << endl;
-    // test_bus.printNLR();
-    // cout << endl;
-    // test_bus.printLNR();
-    // test_bus.insert(18, 60);
-    // cout << endl;
-    // test_bus.printNLR();
-    // cout << endl;
-    // test_bus.printLNR();
-    // cout << "\nTesting Deleting \n";
-    // test_bus.remove(3, 6);
-    // test_bus.printNLR();
-    // cout << endl;
-    // test_bus.printLNR();
-    // cout << endl;
-    // test_bus.remove(18, 60);
     system("pause");
     return 0;
 }
